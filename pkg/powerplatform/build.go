@@ -2,6 +2,8 @@ package powerplatform
 
 import (
 	"context"
+	"fmt"
+	"html/template"
 
 	"get.porter.sh/porter/pkg/exec/builder"
 	"gopkg.in/yaml.v2"
@@ -21,17 +23,9 @@ type MixinConfig struct {
 	ClientVersion string `yaml:"clientVersion,omitempty"`
 }
 
-// This is an example. Replace the following with whatever steps are needed to
-// install required components into
-// const dockerfileLines = `RUN apt-get update && \
-// apt-get install gnupg apt-transport-https lsb-release software-properties-common -y && \
-// echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ stretch main" | \
-//    tee /etc/apt/sources.list.d/azure-cli.list && \
-// apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv \
-// 	--keyserver packages.microsoft.com \
-// 	--recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF && \
-// apt-get update && apt-get install azure-cli
-// `
+type buildConfig struct {
+	MixinConfig
+}
 
 const dockerfileLines = `RUN apt-get update && apt-get install wget -y
 RUN apt-get update && apt-get install -y gpg
@@ -66,7 +60,17 @@ func (m *Mixin) Build(ctx context.Context) error {
 		m.ClientVersion = suppliedClientVersion
 	}
 
-	//fmt.Fprintf(m.Out, dockerfileLines)
+	fmt.Fprintf(m.Out, dockerfileLines)
+	tmpl, err := template.New("dockerfile").Parse(dockerfileLines)
+	if err != nil {
+		return fmt.Errorf("error parsing Dockerfile template for the Fabric mixin: %w", err)
+	}
+
+	cfg := buildConfig{MixinConfig: input.Config}
+
+	if err = tmpl.Execute(m.Out, cfg); err != nil {
+		return fmt.Errorf("error generating Dockerfile lines for the Fabric mixin: %w", err)
+	}
 
 	// Example of pulling and defining a client version for your mixin
 	// fmt.Fprintf(m.Out, "\nRUN curl https://get.helm.sh/helm-%s-linux-amd64.tar.gz --output helm3.tar.gz", m.ClientVersion)

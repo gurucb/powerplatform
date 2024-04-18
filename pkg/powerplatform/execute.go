@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	// "get.porter.sh/porter/pkg/context"
 	"get.porter.sh/porter/pkg/exec/builder"
 	"gopkg.in/yaml.v2"
 )
@@ -46,6 +45,9 @@ func (m *Mixin) Execute(ctx context.Context) error {
 	fmt.Println(string(dependencyString))
 	formatteddependencyString := strings.ReplaceAll(string(dependencyString), "\"", "\\\"")
 
+	fmt.Println("CorrelationId: ", action.Steps[0].CorrelationId)
+	fmt.Println("Token: ", action.Steps[0].Token)
+
 	// fmt.Println(action.Steps[0].Flags.ToSlice(builder.Dashes(DefaultFlagDashes)))
 	fmt.Println("Supported Regions: ")
 	fmt.Println(action.Steps[0].SupportedRegions)
@@ -58,11 +60,17 @@ func (m *Mixin) Execute(ctx context.Context) error {
 	fmt.Println("PackageId: ")
 	fmt.Println(action.Steps[0].PackageId)
 	packageId := action.Steps[0].PackageId
+
+	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("action", action.Name))
+	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("correlationId", action.Steps[0].CorrelationId))
+	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("token", action.Steps[0].Token))
+
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("Licenses", formattedlicenseString))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("Dependencies", formatteddependencyString))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("SupportedRegions", supportedRegions))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("TargetEnvironment", targetEnvironment))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("PackageId", packageId))
+
 	_, err = builder.ExecuteSingleStepAction(ctx, m.RuntimeConfig, action)
 	return err
 }

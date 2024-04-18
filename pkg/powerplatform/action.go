@@ -101,6 +101,8 @@ var _ builder.StepWithOutputs = Instruction{}
 
 type Instruction struct {
 	Description       string        `yaml:"description"`
+	CorrelationId     string        `yaml:"correlationId"`
+	Token             string        `yaml:"token"`
 	Licenses          interface{}   `yaml:"license"`
 	Dependencies      interface{}   `yaml:"dependencies"`
 	SupportedRegions  []string      `yaml:"supportedRegions"`
@@ -130,7 +132,7 @@ type Dependency struct {
 }
 
 func (s Instruction) GetCommand() string {
-	return "powerplatform"
+	return "PowerDeploymentClient"
 }
 
 func (s Instruction) GetWorkingDir() string {
