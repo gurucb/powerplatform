@@ -1,4 +1,4 @@
-package skeletor
+package powerplatform
 
 import (
 	"get.porter.sh/porter/pkg/exec/builder"
@@ -14,8 +14,9 @@ type Action struct {
 
 // MarshalYAML converts the action back to a YAML representation
 // install:
-//   skeletor:
-//     ...
+//
+//	powerplatform:
+//	  ...
 func (a Action) MarshalYAML() (interface{}, error) {
 	return map[string]interface{}{a.Name: a.Steps}, nil
 }
@@ -27,7 +28,7 @@ func (a Action) MakeSteps() interface{} {
 
 // UnmarshalYAML takes any yaml in this form
 // ACTION:
-// - skeletor: ...
+// - powerplatform: ...
 // and puts the steps into the Action.Steps field
 func (a *Action) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	results, err := builder.UnmarshalAction(unmarshal, a)
@@ -57,7 +58,7 @@ func (a Action) GetSteps() []builder.ExecutableStep {
 }
 
 type Step struct {
-	Instruction `yaml:"skeletor"`
+	Instruction `yaml:"powerplatform"`
 }
 
 // Actions is a set of actions, and the steps, passed from Porter.
@@ -66,13 +67,16 @@ type Actions []Action
 // UnmarshalYAML takes chunks of a porter.yaml file associated with this mixin
 // and populates it on the current action set.
 // install:
-//   skeletor:
-//     ...
-//   skeletor:
-//     ...
+//
+//	powerplatform:
+//	  ...
+//	powerplatform:
+//	  ...
+//
 // upgrade:
-//   skeletor:
-//     ...
+//
+//	powerplatform:
+//	  ...
 func (a *Actions) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	results, err := builder.UnmarshalAction(unmarshal, Action{})
 	if err != nil {
@@ -96,39 +100,52 @@ var _ builder.ExecutableStep = Instruction{}
 var _ builder.StepWithOutputs = Instruction{}
 
 type Instruction struct {
-	Name        string   `yaml:"name"`
-	Description string   `yaml:"description"`
-	WorkingDir  string   `yaml:"dir,omitempty"`
-	Arguments   []string `yaml:"arguments,omitempty"`
+	Description       string        `yaml:"description"`
+	Licenses          interface{}   `yaml:"license"`
+	Dependencies      interface{}   `yaml:"dependencies"`
+	SupportedRegions  []string      `yaml:"supportedRegions"`
+	TargetEnvironment string        `yaml:"targetEnvironment"`
+	PackageId         string        `yaml:"packageId"`
+	Arguments         []string      `yaml:"arguments,omitempty"`
+	Flags             builder.Flags `yaml:"flags,omitempty"`
+	// Outputs        []Output      `yaml:"outputs,omitempty"`
+	// SuppressOutput bool          `yaml:"suppress-output,omitempty"`
+}
 
-	// Useful when the CLI you are calling wants some arguments to come after flags
-	// Arguments are passed first, then Flags, then SuffixArguments.
-	SuffixArguments []string `yaml:"suffix-arguments,omitempty"`
-
-	Flags          builder.Flags `yaml:"flags,omitempty"`
-	Outputs        []Output      `yaml:"outputs,omitempty"`
-	SuppressOutput bool          `yaml:"suppress-output,omitempty"`
-
-	// Allow the user to ignore some errors
-	// Adds the ignoreError functionality from the exec mixin
-	// https://release-v1.porter.sh/mixins/exec/#ignore-error
-	builder.IgnoreErrorHandler `yaml:"ignoreError,omitempty"`
+type License struct {
+	SKUList []Skus `yaml:"license"`
+}
+type Skus struct {
+	SKUs     []string `yaml:"skus"`
+	Operator string   `yaml:"operator"`
+}
+type Depends struct {
+	DependencyList []Dependency `yaml:"dependencies"`
+}
+type Dependency struct {
+	Type                        string `yaml:"type"`
+	Query                       string `yaml:"query"`
+	dependencyCheckCondition    string `yaml:"dependencyCheckCondition"`
+	dependencyCheckResultAction string `yaml:"dependencyCheckResultAction"`
 }
 
 func (s Instruction) GetCommand() string {
-	return "skeletor"
+	return "powerplatform"
 }
 
 func (s Instruction) GetWorkingDir() string {
-	return s.WorkingDir
+	// return s.WorkingDir
+	return ""
 }
 
 func (s Instruction) GetArguments() []string {
-	return s.Arguments
+	// return s.Arguments
+	return nil
 }
 
 func (s Instruction) GetSuffixArguments() []string {
-	return s.SuffixArguments
+	// return s.SuffixArguments
+	return nil
 }
 
 func (s Instruction) GetFlags() builder.Flags {
@@ -136,16 +153,18 @@ func (s Instruction) GetFlags() builder.Flags {
 }
 
 func (s Instruction) SuppressesOutput() bool {
-	return s.SuppressOutput
+	// return s.SuppressOutput
+	return false
 }
 
 func (s Instruction) GetOutputs() []builder.Output {
 	// Go doesn't have generics, nothing to see here...
-	outputs := make([]builder.Output, len(s.Outputs))
-	for i := range s.Outputs {
-		outputs[i] = s.Outputs[i]
-	}
-	return outputs
+	// outputs := make([]builder.Output, len(s.Outputs))
+	// for i := range s.Outputs {
+	// 	outputs[i] = s.Outputs[i]
+	// }
+	// return outputs
+	return nil
 }
 
 var _ builder.OutputJsonPath = Output{}

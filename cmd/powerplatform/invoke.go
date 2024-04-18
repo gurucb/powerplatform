@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/getporter/skeletor/pkg/skeletor"
+	"github.com/getporter/powerplatform/pkg/powerplatform"
 	"github.com/spf13/cobra"
 )
 
-func buildInvokeCommand(m *skeletor.Mixin) *cobra.Command {
+func buildInvokeCommand(m *powerplatform.Mixin) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "invoke",
 		Short: "Execute the invoke functionality of this mixin",

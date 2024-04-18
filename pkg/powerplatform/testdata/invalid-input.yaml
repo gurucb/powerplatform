@@ -1,5 +1,5 @@
 install:
-  - skeletor:
+  - powerplatform:
       description: "Invalid Input Test Case"
       args:
       - yarrrr

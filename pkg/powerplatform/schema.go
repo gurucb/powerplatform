@@ -1,4 +1,4 @@
-package skeletor
+package powerplatform
 
 import (
 	_ "embed"

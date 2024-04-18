@@ -1,4 +1,4 @@
-module github.com/getporter/skeletor
+module github.com/getporter/powerplatform
 
 go 1.19
 

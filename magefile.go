@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	mixinName    = "skeletor"
-	mixinPackage = "github.com/getporter/skeletor"
+	mixinName    = "powerplatform"
+	mixinPackage = "github.com/getporter/powerplatform"
 	mixinBin     = "bin/mixins/" + mixinName
 )
 
@@ -46,14 +46,14 @@ func Test() {
 func Publish() {
 	// You can test out publishing locally by overriding PORTER_RELEASE_REPOSITORY and PORTER_PACKAGES_REMOTE
 	if _, overridden := os.LookupEnv(releases.ReleaseRepository); !overridden {
-		os.Setenv(releases.ReleaseRepository, "github.com/YOURNAME/YOURREPO")
+		os.Setenv(releases.ReleaseRepository, "github.com/gurucb/YOURREPO")
 	}
 	magefile.PublishBinaries()
 
 	// TODO: uncomment out the lines below to publish a mixin feed
 	// Set PORTER_PACKAGES_REMOTE to a repository that will contain your mixin feed, similar to github.com/getporter/packages
 	//if _, overridden := os.LookupEnv(releases.PackagesRemote); !overridden {
-	//	os.Setenv("PORTER_PACKAGES_REMOTE", "git@github.com:YOURNAME/YOUR_PACKAGES_REPOSITORY")
+	//	os.Setenv("PORTER_PACKAGES_REMOTE", "git@github.com:gurucb/YOUR_PACKAGES_REPOSITORY")
 	//}
 	//magefile.PublishMixinFeed()
 }

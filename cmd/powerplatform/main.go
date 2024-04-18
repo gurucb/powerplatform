@@ -8,7 +8,7 @@ import (
 	"runtime/debug"
 
 	"get.porter.sh/porter/pkg/cli"
-	"github.com/getporter/skeletor/pkg/skeletor"
+	"github.com/getporter/powerplatform/pkg/powerplatform"
 	"github.com/spf13/cobra"
 	"go.opentelemetry.io/otel/attribute"
 )
@@ -16,7 +16,7 @@ import (
 func main() {
 	run := func() int {
 		ctx := context.Background()
-		m := skeletor.New()
+		m := powerplatform.New()
 		ctx, err := m.ConfigureLogging(ctx)
 		if err != nil {
 			fmt.Println(err)
@@ -27,7 +27,7 @@ func main() {
 		// We don't have tracing working inside a bundle working currently.
 		// We are using StartRootSpan anyway because it creates a TraceLogger and sets it
 		// on the context, so we can grab it later
-		ctx, log := m.StartRootSpan(ctx, "skeletor")
+		ctx, log := m.StartRootSpan(ctx, "powerplatform")
 		defer func() {
 			// Capture panics and trace them
 			if panicErr := recover(); panicErr != nil {
@@ -51,10 +51,10 @@ func main() {
 	os.Exit(run())
 }
 
-func buildRootCommand(m *skeletor.Mixin, in io.Reader) *cobra.Command {
+func buildRootCommand(m *powerplatform.Mixin, in io.Reader) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "skeletor",
-		Long: "A skeleton mixin to use for building other mixins for porter 👩🏽‍✈️",
+		Use:  "powerplatform",
+		Long: "A Power Platform mixin to use for deploying to Power Platform",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// Enable swapping out stdout/stderr for testing
 			m.In = in
