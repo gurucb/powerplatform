@@ -2,6 +2,7 @@ package powerplatform
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -29,12 +30,10 @@ func (m *Mixin) Execute(ctx context.Context) error {
 
 	licenses := action.Steps[0].Licenses
 	licenseString, err := json.Marshal(licenses)
-	formattedlicenseString := "\\\"" + strings.ReplaceAll(string(licenseString), "\"", "\\\"") + "\\\""
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println("License: ")
-	fmt.Println(string(formattedlicenseString))
+	formattedlicenseString := string(licenseString)
 
 	fmt.Println("Dependencies: ")
 	dependencies := action.Steps[0].Dependencies
@@ -46,6 +45,7 @@ func (m *Mixin) Execute(ctx context.Context) error {
 	formatteddependencyString := strings.ReplaceAll(string(dependencyString), "'", "\\'")
 	formatteddependencyString = strings.ReplaceAll(string(formatteddependencyString), "\"", "\\\"")
 	formatteddependencyString = "\\\"" + string(formatteddependencyString) + "\\\""
+	formatteddependencyString = base64.StdEncoding.EncodeToString([]byte(formatteddependencyString))
 
 	fmt.Println("CorrelationId: ", action.Steps[0].CorrelationId)
 	fmt.Println("Token: ", action.Steps[0].Token)

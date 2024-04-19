@@ -115,7 +115,7 @@ type Instruction struct {
 }
 
 type License struct {
-	SKUList []Skus `yaml:"license"`
+	SKUList []map[string]interface{} `yaml:"license"`
 }
 type Skus struct {
 	SKUs     []string `yaml:"skus"`
@@ -132,7 +132,7 @@ type Dependency struct {
 }
 
 func (s Instruction) GetCommand() string {
-	return "PowerDeploymentClient"
+	return "PowerDeploymentClient_"
 }
 
 func (s Instruction) GetWorkingDir() string {
