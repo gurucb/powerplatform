@@ -29,7 +29,7 @@ func (m *Mixin) Execute(ctx context.Context) error {
 
 	licenses := action.Steps[0].Licenses
 	licenseString, err := json.Marshal(licenses)
-	formattedlicenseString := strings.ReplaceAll(string(licenseString), "\"", "\\\"")
+	formattedlicenseString := "\\\"" + strings.ReplaceAll(string(licenseString), "\"", "\\\"") + "\\\""
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -43,15 +43,17 @@ func (m *Mixin) Execute(ctx context.Context) error {
 		fmt.Println("Error:", err)
 	}
 	fmt.Println(string(dependencyString))
-	formatteddependencyString := strings.ReplaceAll(string(dependencyString), "\"", "\\\"")
+	formatteddependencyString := strings.ReplaceAll(string(dependencyString), "'", "\\'")
+	formatteddependencyString = strings.ReplaceAll(string(formatteddependencyString), "\"", "\\\"")
+	formatteddependencyString = "\\\"" + string(formatteddependencyString) + "\\\""
 
 	fmt.Println("CorrelationId: ", action.Steps[0].CorrelationId)
 	fmt.Println("Token: ", action.Steps[0].Token)
-
 	// fmt.Println(action.Steps[0].Flags.ToSlice(builder.Dashes(DefaultFlagDashes)))
+
 	fmt.Println("Supported Regions: ")
 	fmt.Println(action.Steps[0].SupportedRegions)
-	supportedRegions := "[" + strings.Join(action.Steps[0].SupportedRegions, " ") + "]"
+	supportedRegions := strings.Join(action.Steps[0].SupportedRegions, ",")
 
 	fmt.Println("Target Environment: ")
 	fmt.Println(action.Steps[0].TargetEnvironment)
