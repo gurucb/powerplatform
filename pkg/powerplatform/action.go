@@ -100,39 +100,40 @@ var _ builder.ExecutableStep = Instruction{}
 var _ builder.StepWithOutputs = Instruction{}
 
 type Instruction struct {
-	Description       string        `yaml:"description"`
-	CorrelationId     string        `yaml:"correlationId"`
-	Token             string        `yaml:"token"`
-	Licenses          interface{}   `yaml:"license"`
-	Dependencies      interface{}   `yaml:"dependencies"`
-	SupportedRegions  []string      `yaml:"supportedRegions"`
-	TargetEnvironment string        `yaml:"targetEnvironment"`
-	PackageId         string        `yaml:"packageId"`
-	Arguments         []string      `yaml:"arguments,omitempty"`
-	Flags             builder.Flags `yaml:"flags,omitempty"`
+	Description       string                   `yaml:"description"`
+	CorrelationId     string                   `yaml:"correlationId"`
+	Token             string                   `yaml:"token"`
+	Licenses          []map[string]interface{} `yaml:"license"`
+	Dependencies      []map[string]interface{} `yaml:"dependencies"`
+	SupportedRegions  []string                 `yaml:"supportedRegions"`
+	TargetEnvironment string                   `yaml:"targetEnvironment"`
+	PackageId         string                   `yaml:"packageId"`
+	Arguments         []string                 `yaml:"arguments,omitempty"`
+	Flags             builder.Flags            `yaml:"flags,omitempty"`
 	// Outputs        []Output      `yaml:"outputs,omitempty"`
 	// SuppressOutput bool          `yaml:"suppress-output,omitempty"`
 }
 
-type License struct {
-	SKUList []map[string]interface{} `yaml:"license"`
-}
-type Skus struct {
-	SKUs     []string `yaml:"skus"`
-	Operator string   `yaml:"operator"`
-}
-type Depends struct {
-	DependencyList []Dependency `yaml:"dependencies"`
-}
-type Dependency struct {
-	Type                        string `yaml:"type"`
-	Query                       string `yaml:"query"`
-	dependencyCheckCondition    string `yaml:"dependencyCheckCondition"`
-	dependencyCheckResultAction string `yaml:"dependencyCheckResultAction"`
-}
+//	type License struct {
+//		SKUList []map[string]interface{} `yaml:"license"`
+//	}
+//
+//	type Skus struct {
+//		SKUs     []string `yaml:"skus"`
+//		Operator string   `yaml:"operator"`
+//	}
+// type Depends struct {
+// 	DependencyList []Dependency `yaml:"dependencies"`
+// }
+// type Dependency struct {
+// 	Type                        string `yaml:"type"`
+// 	Query                       string `yaml:"query"`
+// 	dependencyCheckCondition    string `yaml:"dependencyCheckCondition"`
+// 	dependencyCheckResultAction string `yaml:"dependencyCheckResultAction"`
+// }
 
 func (s Instruction) GetCommand() string {
-	return "PowerDeploymentClient_"
+	return "PowerPlatformClient"
 }
 
 func (s Instruction) GetWorkingDir() string {

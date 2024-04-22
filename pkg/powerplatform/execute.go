@@ -2,7 +2,6 @@ package powerplatform
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -25,31 +24,33 @@ func (m *Mixin) Execute(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Print("Action Name: ")
-	fmt.Println(action.Name)
+	//TODO: Log Action Name
 
 	licenses := action.Steps[0].Licenses
 	licenseString, err := json.Marshal(licenses)
 	if err != nil {
+		fmt.Println("Failure parsing license JSON")
 		fmt.Println("Error:", err)
 	}
 	formattedlicenseString := string(licenseString)
+	fmt.Println("Unformatted String: \n" + formattedlicenseString)
+	formattedlicenseString = "\\" + strings.ReplaceAll(formattedlicenseString, "\"", "\\") + "\\"
+	fmt.Println("License String:\n" + formattedlicenseString)
+	//TODO: Log formattedlicenseString
 
-	fmt.Println("Dependencies: ")
+	//WORKING below here
 	dependencies := action.Steps[0].Dependencies
 	dependencyString, err := json.Marshal(dependencies)
 	if err != nil {
+		fmt.Println("Failure parsing Dependency JSON")
 		fmt.Println("Error:", err)
 	}
-	fmt.Println(string(dependencyString))
-	formatteddependencyString := strings.ReplaceAll(string(dependencyString), "'", "\\'")
-	formatteddependencyString = strings.ReplaceAll(string(formatteddependencyString), "\"", "\\\"")
-	formatteddependencyString = "\\\"" + string(formatteddependencyString) + "\\\""
-	formatteddependencyString = base64.StdEncoding.EncodeToString([]byte(formatteddependencyString))
+	formatteddependencyString := string(dependencyString)
+	formatteddependencyString = "\"" + strings.ReplaceAll(formatteddependencyString, "\"", "\\\"") + "\""
+	fmt.Println(formatteddependencyString)
 
 	fmt.Println("CorrelationId: ", action.Steps[0].CorrelationId)
 	fmt.Println("Token: ", action.Steps[0].Token)
-	// fmt.Println(action.Steps[0].Flags.ToSlice(builder.Dashes(DefaultFlagDashes)))
 
 	fmt.Println("Supported Regions: ")
 	fmt.Println(action.Steps[0].SupportedRegions)
