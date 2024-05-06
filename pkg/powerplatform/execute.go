@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"get.porter.sh/porter/pkg/exec/builder"
+	"github.com/google/uuid"
 	"gopkg.in/yaml.v2"
 )
 
@@ -73,6 +74,10 @@ func (m *Mixin) Execute(ctx context.Context) error {
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("SupportedRegions", supportedRegions))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("TargetEnvironment", targetEnvironment))
 	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("PackageId", packageId))
+
+	uuid := uuid.New()
+	var outFilePath = "/cnab/app/" + uuid.String()
+	action.Steps[0].Flags = append(action.Steps[0].Flags, builder.NewFlag("filePath", outFilePath))
 
 	_, err = builder.ExecuteSingleStepAction(ctx, m.RuntimeConfig, action)
 	return err
