@@ -35,8 +35,8 @@ RUN wget https://packages.microsoft.com/config/debian/11/prod.list
 RUN mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
 RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
 RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
-RUN apt-get update && \
-    apt-get install -y dotnet-sdk-7.0
+RUN apt-get update && 
+	apt-get install -y libicu-dev && rm -rf /var/lib/apt/lists/* 
 `
 
 // Build will generate the necessary Dockerfile lines
