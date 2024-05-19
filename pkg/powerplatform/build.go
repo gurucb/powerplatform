@@ -35,9 +35,11 @@ RUN wget https://packages.microsoft.com/config/debian/11/prod.list
 RUN mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
 RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
 RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
-RUN apt-get update && 
-	apt-get install -y libicu-dev && rm -rf /var/lib/apt/lists/* 
-`
+RUN apt-get update && apt-get install -y libicu-dev && rm -rf /var/lib/apt/lists/*
+ `
+
+// RUN apt-get update &&
+// 	apt-get install -y libicu-dev && rm -rf /var/lib/apt/lists/*
 
 // Build will generate the necessary Dockerfile lines
 // for an invocation image using this mixin
@@ -60,7 +62,7 @@ func (m *Mixin) Build(ctx context.Context) error {
 		m.ClientVersion = suppliedClientVersion
 	}
 
-	fmt.Fprintf(m.Out, dockerfileLines)
+	fmt.Fprintln(m.Out, dockerfileLines)
 	tmpl, err := template.New("dockerfile").Parse(dockerfileLines)
 	if err != nil {
 		return fmt.Errorf("error parsing Dockerfile template for the Fabric mixin: %w", err)

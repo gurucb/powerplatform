@@ -112,7 +112,10 @@ type Instruction struct {
 	Arguments                  []string                 `yaml:"arguments,omitempty"`
 	Flags                      builder.Flags            `yaml:"flags,omitempty"`
 	builder.IgnoreErrorHandler `yaml:"ignoreError,omitempty"`
-	RuntimeConfig              runtime.RuntimeConfig
+	// Comment by Guru (Execute.go 70 ), make below lines active once we work on outputs from PowerPlatform provisioning API
+	// Outputs                    []Output `yaml:"outputs,omitempty"`
+	// Name                       string   `yaml:"name"`
+	RuntimeConfig runtime.RuntimeConfig
 }
 
 func (s Instruction) GetCommand() string {
