@@ -65,7 +65,7 @@ func (m *Mixin) Build(ctx context.Context) error {
 	fmt.Fprintln(m.Out, dockerfileLines)
 	fmt.Fprintln(m.Out, `ARG GITHUB_TOKEN`)
 	fmt.Fprintln(m.Out, `RUN apt-get update && apt-get install -y --no-install-recommends curl unzip`)
-	fmt.Fprintln(m.Out, `RUN curl "https://${GITHUB_TOKEN}@raw.githubusercontent.com/hemantkathuria/privatemixintest/main/mixins/fabric/v0.0.1/cli/FabricCompositeSolution" -o "/cnab/app/FabricCompositeSolution"`)
+	fmt.Fprintln(m.Out, `RUN curl "https://${GITHUB_TOKEN}@raw.githubusercontent.com/hemantkathuria/privatemixintest/main/mixins/power/v0.0.1/cli/PowerPlatformClient" -o "/cnab/app/PowerPlatformClient"`)
 	fmt.Fprintln(m.Out, `RUN chmod 0777 /cnab/app`)
 	fmt.Fprintln(m.Out, `RUN echo $PATH`)
 	fmt.Fprintln(m.Out, `ENV PATH="$PATH:/cnab/app"`)
