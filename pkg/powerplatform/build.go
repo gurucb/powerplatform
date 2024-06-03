@@ -3,7 +3,7 @@ package powerplatform
 import (
 	"context"
 	"fmt"
-	"html/template"
+	"text/template"
 
 	"get.porter.sh/porter/pkg/exec/builder"
 	"gopkg.in/yaml.v2"
@@ -29,12 +29,6 @@ type buildConfig struct {
 
 const dockerfileLines = `RUN apt-get update && apt-get install wget -y
 RUN apt-get update && apt-get install -y gpg
-RUN wget -O - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o microsoft.asc.gpg
-RUN mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
-RUN wget https://packages.microsoft.com/config/debian/11/prod.list
-RUN mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
 RUN apt-get update && apt-get install -y libicu-dev && rm -rf /var/lib/apt/lists/*
  `
 
